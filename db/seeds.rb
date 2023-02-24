@@ -10,20 +10,22 @@ require 'faker'
 
 puts "destroying articles"
 Article.all.each do |article|
-  article.photo.purge
+  article.photos.each do |photo|
+    photo.purge
+  end
 end
 Article.destroy_all
 
 file = URI.open("https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/NES-Console-Set.jpg/1200px-NES-Console-Set.jpg")
 article = Article.new(title: "NES", body: "A great console")
-article.photo.attach(io: file, filename: article.title, content_type: "image/png")
+article.photos.attach(io: file, filename: 'nes.png', content_type: "image/png")
 article.save
 
 10.times do
   file = URI.open('https://source.unsplash.com/featured?kitty')
 
   article = Article.create(title: Faker::Hacker.say_something_smart, body: Faker::Hacker.say_something_smart)
-  article.photo.attach(io: file, filename: "nes.png", content_type: "image/png")
+  article.photos.attach(io: file, filename: article.title, content_type: "image/png")
   article.save
   p article
 end
